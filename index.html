@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Women in national parliaments (2000–2024)</title>
+  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: #ffffff;
+      color: #1f2937;
+    }
+    .wrap {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 32px 20px 40px;
+    }
+    h1 {
+      margin: 0 0 6px;
+      font-size: 30px;
+      font-weight: 700;
+      color: #111827;
+    }
+    p.sub {
+      margin: 0 0 18px;
+      color: #4b5563;
+      line-height: 1.5;
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 18px 18px 14px;
+      margin-bottom: 18px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      color: #111827;
+    }
+    label {
+      font-size: 13px;
+      color: #374151;
+      margin-bottom: 6px;
+      display: block;
+    }
+    select {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #111827;
+      font-size: 14px;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    @media (min-width: 860px) {
+      .row.two { grid-template-columns: 1fr 1fr; }
+    }
+    .plot {
+      width: 100%;
+      height: 520px;
+    }
+    .plot.small {
+      height: 460px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <h1>Women in national parliaments (2000–2024)</h1>
+  <p class="sub">
+  Percentage of parliamentary seats held by women.<br>
+  Source: World Bank Open Data – Gender Statistics
+</p>
+
+
+  <div class="card">
+    <h2>Historical trend</h2>
+    <div id="trend" class="plot"></div>
+  </div>
+
+  <div class="card">
+    <h2>Change between two years</h2>
+    <div class="row two">
+      <div>
+        <label for="startYear">Start year</label>
+        <select id="startYear"></select>
+      </div>
+      <div>
+        <label for="endYear">End year</label>
+        <select id="endYear"></select>
+      </div>
+    </div>
+    <div id="change" class="plot small"></div>
+  </div>
+
+  <div class="card">
+    <h2>Snapshot by year</h2>
+    <div class="row">
+      <div>
+        <label for="snapYear">Year</label>
+        <select id="snapYear"></select>
+      </div>
+    </div>
+    <div id="snapshot" class="plot small"></div>
+  </div>
+</div>
+
+<script>
+  const DATA = [{"region": "East Asia & Pacific", "code": "EAS", "year": 2000, "value": 16.357597564351}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2001, "value": 16.5537270087125}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2002, "value": 17.2167587228883}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2003, "value": 16.0696008188332}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2004, "value": 16.6253425551351}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2005, "value": 16.9089021541656}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2006, "value": 17.2857917570499}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2007, "value": 17.7502307793749}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2008, "value": 17.9584866001051}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2009, "value": 18.3339871845168}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2010, "value": 17.7694235588972}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2011, "value": 17.6986775429489}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2012, "value": 17.8567039449428}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2013, "value": 18.8274254875506}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2014, "value": 18.5955127392572}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2015, "value": 19.2873741285825}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2016, "value": 19.4261880687563}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2017, "value": 19.810606060606}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2018, "value": 20.2357071213641}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2019, "value": 20.5038149448952}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2020, "value": 21.3300492610837}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2021, "value": 21.3844850538545}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2022, "value": 21.9275879653238}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2023, "value": 22.5273328248157}, {"region": "East Asia & Pacific", "code": "EAS", "year": 2024, "value": 23.01567239636}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2000, "value": 16.562282533055}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2001, "value": 16.5375897242161}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2002, "value": 18.3352674332735}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2003, "value": 17.7636570561457}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2004, "value": 18.8124575531192}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2005, "value": 19.16161998486}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2006, "value": 19.532967032967}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2007, "value": 21.0099352839304}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2008, "value": 21.3488329181659}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2009, "value": 21.8946218946219}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2010, "value": 21.9934699800472}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2011, "value": 22.7041742286751}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2012, "value": 23.7507877914828}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2013, "value": 24.7976254722072}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2014, "value": 25.3484959647836}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2015, "value": 25.7431192660551}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2016, "value": 26.0058791107845}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2017, "value": 27.3847852083525}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2018, "value": 27.9538376992123}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2019, "value": 29.4559443121451}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2020, "value": 30.2941445981856}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2021, "value": 31.1337182659701}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2022, "value": 30.9232794283565}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2023, "value": 31.1179949310053}, {"region": "Europe & Central Asia", "code": "ECS", "year": 2024, "value": 31.4502529510961}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2000, "value": 15.1574254667038}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2001, "value": 14.3748304854896}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2002, "value": 16.1181653278051}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2003, "value": 18.4690157958688}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2004, "value": 19.0094683175528}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2005, "value": 20.2086365841824}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2006, "value": 20.3406092588151}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2007, "value": 21.1068519405846}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2008, "value": 22.1611283767631}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2009, "value": 22.7012863268223}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2010, "value": 23.0060606060606}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2011, "value": 23.0346475507766}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2012, "value": 24.4858919177427}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2013, "value": 25.7512826777425}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2014, "value": 27.4607703281027}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2015, "value": 27.9011099899092}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2016, "value": 28.8011350200993}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2017, "value": 29.7405189620758}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2018, "value": 31.196083003031}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2019, "value": 31.669776119403}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2020, "value": 32.757793764988}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2021, "value": 34.4088610642909}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2022, "value": 35.7339334833708}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2023, "value": 35.6995884773663}, {"region": "Latin America & Caribbean", "code": "LCN", "year": 2024, "value": 36.4648033126294}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2002, "value": 7.44617224880383}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2003, "value": 7.51673767498479}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2004, "value": 8.08649289099527}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2005, "value": 8.53907134767838}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2006, "value": 10.1795046580323}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2007, "value": 10.39637599094}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2008, "value": 10.45114486511}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2009, "value": 10.8447232803047}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2010, "value": 12.2462344466274}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2011, "value": 12.1233859397417}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2012, "value": 14.6801346801347}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2013, "value": 17.0719351570415}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2014, "value": 17.2037553920325}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2015, "value": 17.4583122789287}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2016, "value": 17.9390162474961}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2017, "value": 17.2528201725282}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2018, "value": 16.9630322882546}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2019, "value": 17.2717271727173}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2020, "value": 18.9427312775331}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2021, "value": 17.8113037604143}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2022, "value": 17.7299880525687}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2023, "value": 17.1317641349187}, {"region": "Middle East, North Africa, Afghanistan & Pakistan", "code": "MEA", "year": 2024, "value": 17.1867261020307}, {"region": "North America", "code": "NAC", "year": 2001, "value": 16.7119565217391}, {"region": "North America", "code": "NAC", "year": 2002, "value": 16.5760869565218}, {"region": "North America", "code": "NAC", "year": 2003, "value": 16.8478260869565}, {"region": "North America", "code": "NAC", "year": 2004, "value": 17.4966352624495}, {"region": "North America", "code": "NAC", "year": 2005, "value": 17.6312247644683}, {"region": "North America", "code": "NAC", "year": 2006, "value": 18.1695827725438}, {"region": "North America", "code": "NAC", "year": 2007, "value": 18.6486486486487}, {"region": "North America", "code": "NAC", "year": 2008, "value": 19.1117092866757}, {"region": "North America", "code": "NAC", "year": 2009, "value": 18.9771197846568}, {"region": "North America", "code": "NAC", "year": 2010, "value": 18.9771197846568}, {"region": "North America", "code": "NAC", "year": 2011, "value": 20.1079622132254}, {"region": "North America", "code": "NAC", "year": 2012, "value": 20.7547169811321}, {"region": "North America", "code": "NAC", "year": 2013, "value": 20.6756756756757}, {"region": "North America", "code": "NAC", "year": 2014, "value": 21.6981132075472}, {"region": "North America", "code": "NAC", "year": 2015, "value": 22.279792746114}, {"region": "North America", "code": "NAC", "year": 2016, "value": 22.1789883268483}, {"region": "North America", "code": "NAC", "year": 2017, "value": 22.3667100130039}, {"region": "North America", "code": "NAC", "year": 2018, "value": 25.0}, {"region": "North America", "code": "NAC", "year": 2019, "value": 25.8777633289987}, {"region": "North America", "code": "NAC", "year": 2020, "value": 28.1413612565445}, {"region": "North America", "code": "NAC", "year": 2021, "value": 28.8860103626943}, {"region": "North America", "code": "NAC", "year": 2022, "value": 29.4805194805195}, {"region": "North America", "code": "NAC", "year": 2023, "value": 29.7016861219196}, {"region": "North America", "code": "NAC", "year": 2024, "value": 29.5719844357976}, {"region": "South Asia", "code": "SAS", "year": 2000, "value": 8.44409695074277}, {"region": "South Asia", "code": "SAS", "year": 2001, "value": 8.12236286919831}, {"region": "South Asia", "code": "SAS", "year": 2002, "value": 6.31364562118126}, {"region": "South Asia", "code": "SAS", "year": 2003, "value": 6.31364562118126}, {"region": "South Asia", "code": "SAS", "year": 2004, "value": 6.1611374407583}, {"region": "South Asia", "code": "SAS", "year": 2005, "value": 9.15678524374177}, {"region": "South Asia", "code": "SAS", "year": 2006, "value": 8.5582620144832}, {"region": "South Asia", "code": "SAS", "year": 2007, "value": 9.96138996138995}, {"region": "South Asia", "code": "SAS", "year": 2008, "value": 16.3915765509391}, {"region": "South Asia", "code": "SAS", "year": 2009, "value": 18.657937806874}, {"region": "South Asia", "code": "SAS", "year": 2010, "value": 18.6033824331697}, {"region": "South Asia", "code": "SAS", "year": 2011, "value": 18.9336235038085}, {"region": "South Asia", "code": "SAS", "year": 2012, "value": 18.9336235038085}, {"region": "South Asia", "code": "SAS", "year": 2013, "value": 12.0578778135048}, {"region": "South Asia", "code": "SAS", "year": 2014, "value": 17.8319783197832}, {"region": "South Asia", "code": "SAS", "year": 2015, "value": 17.9556517036236}, {"region": "South Asia", "code": "SAS", "year": 2016, "value": 18.0487804878049}, {"region": "South Asia", "code": "SAS", "year": 2017, "value": 18.058568329718}, {"region": "South Asia", "code": "SAS", "year": 2018, "value": 16.4041994750656}, {"region": "South Asia", "code": "SAS", "year": 2019, "value": 17.2459016393443}, {"region": "South Asia", "code": "SAS", "year": 2020, "value": 17.3228346456693}, {"region": "South Asia", "code": "SAS", "year": 2021, "value": 17.4113009198423}, {"region": "South Asia", "code": "SAS", "year": 2022, "value": 17.6393442622951}, {"region": "South Asia", "code": "SAS", "year": 2023, "value": 17.7206851119894}, {"region": "South Asia", "code": "SAS", "year": 2024, "value": 16.2691652470187}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2000, "value": 11.5853658536585}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2001, "value": 12.2828405973788}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2002, "value": 13.4667114996638}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2003, "value": 13.7088362390106}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2004, "value": 14.7354670150229}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2005, "value": 16.2370142362447}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2006, "value": 16.6392092257002}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2007, "value": 17.3064660119883}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2008, "value": 17.8008458285275}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2009, "value": 18.4640522875817}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2010, "value": 18.7371663244353}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2011, "value": 20.5351663188904}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2012, "value": 21.3758023495216}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2013, "value": 22.4570200573066}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2014, "value": 22.1580435049773}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2015, "value": 23.6369910282954}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2016, "value": 23.8100686498856}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2017, "value": 24.0169321599644}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2018, "value": 24.0742799955521}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2019, "value": 24.0781160252728}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2020, "value": 24.8685901179769}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2021, "value": 25.9250530285176}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2022, "value": 26.3382065154829}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2023, "value": 27.0339976553341}, {"region": "Sub-Saharan Africa", "code": "SSF", "year": 2024, "value": 26.87765706188}, {"region": "World", "code": "WLD", "year": 2000, "value": 13.9044395261034}, {"region": "World", "code": "WLD", "year": 2001, "value": 14.0907008703619}, {"region": "World", "code": "WLD", "year": 2002, "value": 15.1974459115988}, {"region": "World", "code": "WLD", "year": 2003, "value": 15.1792072157607}, {"region": "World", "code": "WLD", "year": 2004, "value": 15.897000565931}, {"region": "World", "code": "WLD", "year": 2005, "value": 16.4745450107136}, {"region": "World", "code": "WLD", "year": 2006, "value": 16.9696642264783}, {"region": "World", "code": "WLD", "year": 2007, "value": 17.8692023015208}, {"region": "World", "code": "WLD", "year": 2008, "value": 18.4427546321088}, {"region": "World", "code": "WLD", "year": 2009, "value": 19.0250865737926}, {"region": "World", "code": "WLD", "year": 2010, "value": 19.157037815126}, {"region": "World", "code": "WLD", "year": 2011, "value": 19.8277667259973}, {"region": "World", "code": "WLD", "year": 2012, "value": 20.7552042977427}, {"region": "World", "code": "WLD", "year": 2013, "value": 21.7774474410703}, {"region": "World", "code": "WLD", "year": 2014, "value": 22.1882965165675}, {"region": "World", "code": "WLD", "year": 2015, "value": 22.8492991579336}, {"region": "World", "code": "WLD", "year": 2016, "value": 23.0913674246322}, {"region": "World", "code": "WLD", "year": 2017, "value": 23.5903366743768}, {"region": "World", "code": "WLD", "year": 2018, "value": 24.0978782716432}, {"region": "World", "code": "WLD", "year": 2019, "value": 24.6366036865178}, {"region": "World", "code": "WLD", "year": 2020, "value": 25.5804311774461}, {"region": "World", "code": "WLD", "year": 2021, "value": 26.1284632146934}, {"region": "World", "code": "WLD", "year": 2022, "value": 26.4676194017957}, {"region": "World", "code": "WLD", "year": 2023, "value": 26.7357485206308}, {"region": "World", "code": "WLD", "year": 2024, "value": 27.0344977100892}];
+  const REGION_ORDER = ["World", "East Asia & Pacific", "Europe & Central Asia", "Latin America & Caribbean", "Middle East, North Africa, Afghanistan & Pakistan", "North America", "South Asia", "Sub-Saharan Africa"];
+  const YEAR_MIN = 2000;
+  const YEAR_MAX = 2024;
+
+  const REGION_COLOR = {"World": "#8dd3c7", "East Asia & Pacific": "#bc80bd", "Europe & Central Asia": "#bebada", "Latin America & Caribbean": "#fb8072", "North America": "#80b1d3", "South Asia": "#fdb462", "Sub-Saharan Africa": "#b3de69", "Middle East, North Africa, Afghanistan & Pakistan": "#fccde5"};
+  function colorFor(region) {
+    return REGION_COLOR[region] || "#9ca3af";
+  }
+
+  const years = Array.from({length: YEAR_MAX - YEAR_MIN + 1}, (_,i) => YEAR_MIN + i);
+
+  // group by region (trend)
+  function byRegion() {
+    const m = new Map();
+    for (const r of DATA) {
+      if (!m.has(r.region)) m.set(r.region, []);
+      m.get(r.region).push(r);
+    }
+    for (const [k, arr] of m) arr.sort((a,b)=>a.year-b.year);
+    return m;
+  }
+  const regMap = byRegion();
+
+  // fast index region|year -> value
+  const valueIndex = new Map();
+  for (const r of DATA) {
+    valueIndex.set(r.region + "|" + r.year, r.value);
+  }
+  function valueFor(region, year) {
+    const k = region + "|" + year;
+    return valueIndex.has(k) ? valueIndex.get(k) : null;
+  }
+
+  function fillSelect(el, values, def) {
+    el.innerHTML = "";
+    values.forEach(v => {
+      const o = document.createElement("option");
+      o.value = v;
+      o.textContent = v;
+      el.appendChild(o);
+    });
+    el.value = def;
+  }
+
+  const baseLayout = {
+    paper_bgcolor: "#ffffff",
+    plot_bgcolor: "#ffffff",
+    font: {color: "#111827"},
+    margin: {l: 62, r: 20, t: 16, b: 60},
+    xaxis: {gridcolor: "#e5e7eb", zerolinecolor: "#e5e7eb"},
+    yaxis: {gridcolor: "#e5e7eb", zerolinecolor: "#e5e7eb"},
+    legend: {
+      title: { text: "Click to show/hide" },
+      bordercolor: "#e5e7eb",
+      borderwidth: 1
+    }
+  };
+
+  // helper for "no grid" axes (for charts 2 & 3 only)
+  function noGridAxis(extra) {
+    return {
+      ...extra,
+      gridcolor: "rgba(0,0,0,0)",
+      zerolinecolor: "rgba(0,0,0,0)"
+    };
+  }
+
+  // 1) Trend (grid ON) — tooltips with 1 decimal + %
+  Plotly.newPlot("trend",
+    REGION_ORDER.filter(r=>regMap.has(r)).map(region => {
+      const a = regMap.get(region);
+      const c = colorFor(region);
+      return {
+        type: "scatter",
+        mode: "lines+markers",
+        name: region,
+        x: a.map(d=>d.year),
+        y: a.map(d=>d.value),
+        line: { color: c },
+        marker: { color: c },
+        hovertemplate: "%{x}<br>%{y:.1f}%<extra>" + region + "</extra>"
+      };
+    }),
+    {
+      ...baseLayout,
+      xaxis: {...baseLayout.xaxis, title: "Year"},
+      yaxis: {...baseLayout.yaxis, title: "% seats held by women"}
+    },
+    {responsive:true}
+  );
+
+  const startSel = document.getElementById("startYear");
+  const endSel   = document.getElementById("endYear");
+  const snapSel  = document.getElementById("snapYear");
+
+  fillSelect(startSel, years, 2000);
+  fillSelect(endSel, years, 2024);
+  fillSelect(snapSel, years, 2024);
+
+  function clampYears() {
+    let s = +startSel.value;
+    let e = +endSel.value;
+    if (e < s) {
+      e = s;
+      endSel.value = String(e);
+    }
+    return {s, e};
+  }
+
+  // Bar thickness (category units): smaller = thinner bars
+  const BAR_WIDTH = 0.45;
+
+  // 2) Change — ORDERED DESC by delta, grid OFF, tooltip % with 1 decimal
+  function renderChange() {
+    const {s, e} = clampYears();
+
+    const rows = REGION_ORDER
+      .filter(r => regMap.has(r))
+      .map(r => {
+        const a = valueFor(r, s);
+        const b = valueFor(r, e);
+        const d = (a!=null && b!=null) ? (b - a) : null;
+        return { region: r, start: a, end: b, delta: d };
+      });
+
+    // sort by delta desc, nulls last
+    rows.sort((u, v) => {
+      if (u.delta == null && v.delta == null) return 0;
+      if (u.delta == null) return 1;
+      if (v.delta == null) return -1;
+      return v.delta - u.delta;
+    });
+
+    const regs = rows.map(r => r.region);
+    const deltas = rows.map(r => r.delta);
+    const colors = regs.map(r => colorFor(r));
+
+    Plotly.react("change",
+      [{
+        type: "bar",
+        x: regs,
+        y: deltas,
+        marker: { color: colors },
+        width: BAR_WIDTH,
+        customdata: rows.map(r => [r.start, r.end]),
+        hovertemplate:
+          "<b>%{x}</b><br>" +
+          "Start: %{customdata[0]:.1f}%<br>" +
+          "End: %{customdata[1]:.1f}%<br>" +
+          "Δ: %{y:.1f}%<extra></extra>"
+      }],
+      {
+        ...baseLayout,
+        margin: {l: 62, r: 20, t: 16, b: 120},
+        xaxis: noGridAxis({
+          tickangle: -30,
+          type: "category",
+          categoryorder: "array",
+          categoryarray: regs
+        }),
+        yaxis: noGridAxis({
+          title: "% change"
+        })
+      },
+      {responsive:true}
+    );
+  }
+
+  // 3) Snapshot — ORDERED DESC by value, grid OFF, tooltip % with 1 decimal
+  let snapshotInitialized = false;
+
+  function initSnapshot() {
+    Plotly.newPlot(
+      "snapshot",
+      [{
+        type: "bar",
+        x: [],
+        y: [],
+        marker: { color: [] },
+        width: BAR_WIDTH,
+        hovertemplate: "<b>%{x}</b><br>%{y:.1f}%<extra></extra>"
+      }],
+      {
+        ...baseLayout,
+        margin: { l: 62, r: 20, t: 16, b: 120 },
+        xaxis: noGridAxis({ tickangle: -30, type: "category" }),
+        yaxis: noGridAxis({ title: "% seats held by women" })
+      },
+      { responsive: true }
+    );
+    snapshotInitialized = true;
+  }
+
+  function renderSnapshot() {
+    const y = +snapSel.value;
+
+    const pairs = REGION_ORDER
+      .filter(r => regMap.has(r))
+      .map(r => ({ region: r, value: valueFor(r, y) }))
+      .filter(d => d.value !== null);
+
+    pairs.sort((a, b) => b.value - a.value);
+
+    const regs = pairs.map(d => d.region);
+    const vals = pairs.map(d => d.value);
+    const colors = regs.map(r => colorFor(r));
+
+    const newLayout = {
+      ...baseLayout,
+      margin: { l: 62, r: 20, t: 16, b: 120 },
+      xaxis: noGridAxis({
+        tickangle: -30,
+        type: "category",
+        categoryorder: "array",
+        categoryarray: regs
+      }),
+      yaxis: noGridAxis({
+        title: "% seats held by women"
+      })
+    };
+
+    if (!snapshotInitialized) {
+      initSnapshot();
+    }
+
+    Plotly.animate(
+      "snapshot",
+      {
+        data: [{
+          type: "bar",
+          x: regs,
+          y: vals,
+          marker: { color: colors },
+          width: BAR_WIDTH,
+          hovertemplate: "<b>%{x}</b><br>%{y:.1f}%<extra></extra>"
+        }],
+        layout: newLayout
+      },
+      {
+        transition: { duration: 650, easing: "cubic-in-out" },
+        frame: { duration: 650, redraw: true }
+      }
+    );
+  }
+
+  startSel.addEventListener("change", renderChange);
+  endSel.addEventListener("change", renderChange);
+  snapSel.addEventListener("change", renderSnapshot);
+
+  renderChange();
+  initSnapshot();
+  renderSnapshot();
+</script>
+</body>
+</html>
